@@ -1,0 +1,17 @@
+{
+  "name": "number-home",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "dependencies": {
+    "firebase": "^9.23.0",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "buffer": "^6.0.3",
+    "parcel": "^2.13.0",
+    "process": "^0.11.10"
+  }
+}
