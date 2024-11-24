@@ -7,14 +7,14 @@
 101C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\protobufjs\cli\node_modules\lodash\repeat.js133769604017374823 0
 114C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\htmlnano\docs\versioned_docs\version-1.1.1\040-presets.md133769599567210000 0
 71C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\faye-websocket133769603999547843 1
-56C:\Users\SebaG\.cursor-tutor\src\NumberHome\.env.example133769627671104688 0
+56C:\Users\SebaG\.cursor-tutor\src\NumberHome\.env.example133769643273970499 0
 81C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\auth\dist\node133769604175395811 1
 83C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\utility-types\CHANGELOG.md133769599588120000 0
 71C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\srcset\license133769599587620000 0
 117C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@parcel\core\test\fixtures\config-plugin-not-found\.parcelrc133769599588680000 0
 109C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\auth\dist\esm5\src\core\util\event_id.d.ts133769604034771902 0
 108C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\protobufjs\cli\node_modules\underscore\cjs\isSet.js133769604009878065 0
-48C:\Users\SebaG\.cursor-tutor\src\NumberHome\.env133769627289744891 0
+48C:\Users\SebaG\.cursor-tutor\src\NumberHome\.env133769643174067086 0
 129C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\firestore\dist\lite\packages\firestore\rollup.config.lite.d.ts133769604167250893 0
 106C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\firebase\auth\cordova\dist\esm\app\index.cdn.d.ts133769604029537994 0
 127C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\auth\dist\esm5\src\core\strategies\action_code_settings.d.ts133769604027671052 0
@@ -36,12 +36,12 @@
 62C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\cliui133769603999445528 1
 113C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\protobufjs\cli\node_modules\underscore\underscore-min.js133769604025263338 0
 100C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\firebase\compat\database\dist\index.mjs.map133769604028092173 0
-60C:\Users\SebaG\.cursor-tutor\src\NumberHome\.env.development133769630646524042 0
+60C:\Users\SebaG\.cursor-tutor\src\NumberHome\.env.development133769643179186041 0
 62C:\Users\SebaG\.cursor-tutor\src\NumberHome\src\css\styles.css133769625628953623 0
 130C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\firestore\dist\lite\firestore\src\remote\persistent_stream.d.ts133769604164819478 0
 98C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\app\dist\esm\app\src\types.d.ts133769604024525771 0
 54C:\Users\SebaG\.cursor-tutor\src\NumberHome\.gitignore133769628306668137 0
-48C:\Users\SebaG\.cursor-tutor\src\NumberHome\dist133769627945551644 1
+48C:\Users\SebaG\.cursor-tutor\src\NumberHome\dist133769643390319777 1
 92C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\htmlparser2\lib\WritableStream.d.ts133769599568810000 0
 67C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\is-extglob133769599693076936 1
 126C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\auth\dist\node\src\core\user\additional_user_info.test.d.ts133769604028187650 0
@@ -157,7 +157,7 @@
 126C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\firestore\dist\lite\firestore\test\integration\api_internal133769604170937156 1
 87C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\firebase\auth\dist\esm\storage133769604035288622 1
 108C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\storage\dist\src\implementation\json.d.ts133769604017154613 0
-58C:\Users\SebaG\.cursor-tutor\src\NumberHome\src\index.html133769624389482595 0
+58C:\Users\SebaG\.cursor-tutor\src\NumberHome\src\index.html133769641346633932 0
 60C:\Users\SebaG\.cursor-tutor\src\NumberHome\src\js\script.js133769627928532615 0
 108C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@swc\helpers\esm\_class_private_field_loose_base.js133769599609000000 0
 88C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\performance\dist\test133769604016366808 1
@@ -212,7 +212,7 @@
 105C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\firebase\analytics\dist\esm\functions\index.d.ts133769604032310784 0
 100C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\auth\dist\index.webworker.esm5.js133769604024239598 0
 111C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\protobufjs\cli\node_modules\lodash\fp\toPlainObject.js133769604024646135 0
-65C:\Users\SebaG\.cursor-tutor\src\NumberHome\src\js\vite.config.js133769628292599805 0
+65C:\Users\SebaG\.cursor-tutor\src\NumberHome\src\js\vite.config.js133769644881125411 0
 99C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\firebase\messaging\dist\esm\firestore\lite133769604176503807 1
 119C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\protobufjs\cli\node_modules\xmlcreate\lib\nodes\XmlCharData.js133769604027154807 0
 90C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\firebase\app-check\dist\analytics133769604032530992 1
@@ -6092,7 +6092,7 @@
 140C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\firestore\dist\lite\packages\firestore\src\local\indexeddb_sentinels.d.ts133769604037259514 0
 103C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\@firebase\auth\dist\esm2017\src\mfa\index.d.ts133769604138446456 0
 107C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\firebase\installations\dist\performance\index.d.ts133769604175862209 0
-66C:\Users\SebaG\.cursor-tutor\src\NumberHome\dist\index.e82f28a0.js133769627945511606 0
+66C:\Users\SebaG\.cursor-tutor\src\NumberHome\dist\index.e82f28a0.js133769643390279739 0
 117C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\firebase\auth\cordova\dist\esm\compat\performance\index.d.ts133769604034406507 0
 88C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\caniuse-lite\data\regions\AI.js133769599564630000 0
 81C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\firebase\firebase-app.js133769604015157590 0
@@ -18444,5 +18444,5 @@
 88C:\Users\SebaG\.cursor-tutor\src\NumberHome\node_modules\.bin\update-browserslist-db.ps1133769602276464601 0
 67C:\Users\SebaG\.cursor-tutor\src\NumberHome\dist\index.77a9bc14.css133769625629104420 0
 71C:\Users\SebaG\.cursor-tutor\src\NumberHome\dist\index.77a9bc14.css.map133769625629124441 0
-70C:\Users\SebaG\.cursor-tutor\src\NumberHome\dist\index.e82f28a0.js.map133769627945541633 0
+70C:\Users\SebaG\.cursor-tutor\src\NumberHome\dist\index.e82f28a0.js.map133769643390309769 0
 59C:\Users\SebaG\.cursor-tutor\src\NumberHome\dist\index.html133769624389638282 0
