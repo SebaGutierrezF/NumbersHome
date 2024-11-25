@@ -4,21 +4,11 @@ import { getFirestore, collection, getDocs, addDoc, query, where, orderBy, limit
 
 // Función para obtener las variables de entorno
 function getEnvConfig() {
-    // Si estamos en desarrollo local y no hay window.env, usar valores por defecto
     if (!window.env) {
-        console.warn('Environment variables not found, using defaults');
-        return {
-            apiKey: "AIzaSyDrDVOD0O0-6XgXEoIZLD0DmYjbOTjUo-M",
-            authDomain: "numbershome-4d9e4.firebaseapp.com",
-            projectId: "numbershome-4d9e4",
-            storageBucket: "numbershome-4d9e4.appspot.com",
-            messagingSenderId: "1021140758133",
-            appId: "1:1021140758133:web:d1d2414224ac85e7d4d2a3",
-            measurementId: "G-JBWP6YX4FL"
-        };
+        console.error('Environment variables not found. Please make sure you have configured the GitHub secrets.');
+        throw new Error('Missing environment configuration');
     }
 
-    // Si window.env existe, usar esos valores
     return {
         apiKey: window.env.VITE_FIREBASE_API_KEY,
         authDomain: window.env.VITE_FIREBASE_AUTH_DOMAIN,
