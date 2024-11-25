@@ -1,10 +1,10 @@
 // Opción 1: Usando node_modules (si estás usando npm)
-import { initializeApp } from './node_modules/firebase/app';
-import { getFirestore } from './node_modules/firebase/firestore';
+// import { initializeApp } from './node_modules/firebase/app';
+// import { getFirestore } from './node_modules/firebase/firestore';
 
 // Opción 2: Usando CDN (para aplicaciones basadas en navegador)
-// import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-// import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
