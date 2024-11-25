@@ -1,5 +1,5 @@
-import { initializeApp } from "/firebase/app";
-import { getFirestore, collection, query, where, getDocs, addDoc } from "/firebase/firestore";
+import { initializeApp } from "../node_modules/firebase/app";
+import { getFirestore, collection, query, where, getDocs, addDoc } from "../node_modules/firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
