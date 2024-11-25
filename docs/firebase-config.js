@@ -1,5 +1,5 @@
-import { initializeApp } from '/firebase/app';
-import { getFirestore, collection, addDoc, query, where, getDocs } from '/firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -17,9 +17,9 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Funciones de utilidad para Firebase
-export const saveToFirebase = async (collection, data) => {
+export const saveToFirebase = async (collectionName, data) => {
     try {
-        const docRef = await addDoc(collection(db, collection), data);
+        const docRef = await addDoc(collection(db, collectionName), data);
         return { success: true, id: docRef.id };
     } catch (error) {
         console.error('Error saving to Firebase:', error);
