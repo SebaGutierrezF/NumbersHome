@@ -1,4 +1,4 @@
-import { db, collection, query, where, getDocs, addDoc } from './firebase-config.js';
+import { db } from './firebase-config.js';
 import { translations } from './translations.js';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
@@ -244,11 +244,10 @@ document.getElementById('telefonoForm').addEventListener('submit', async functio
     
     try {
         // Buscar en Firebase
-        const numerosRef = collection(db, 'numeros');
-        const q = query(numerosRef, where('telefono', '==', telefono));
-        
-        try {
-            const querySnapshot = await getDocs(q);
+        db.collection('numbers')
+          .where('telefono', '==', telefono)
+          .get()
+          .then(querySnapshot => {
             let data;
 
             if (!querySnapshot.empty) {
@@ -404,10 +403,11 @@ document.getElementById('telefonoForm').addEventListener('submit', async functio
                     </h3>
                 `;
             }
-        } catch (error) {
+        })
+        .catch(error => {
             console.error('Error en la operación:', error);
             resultado.innerHTML = t.processingError;
-        }
+        });
     } catch (error) {
         console.error('Error general:', error);
         resultado.innerHTML = t.error;
