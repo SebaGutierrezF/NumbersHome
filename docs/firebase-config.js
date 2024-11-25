@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import { initializeApp } from './node_modules/firebase/app';
 import "firebase/firestore";
 
 const firebaseConfig = {
