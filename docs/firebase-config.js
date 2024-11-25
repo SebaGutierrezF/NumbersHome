@@ -1,7 +1,16 @@
 // Importaciones usando CDN para GitHub Pages
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, collection, getDocs, addDoc, query, where, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-import { firebaseConfig } from './config.js';
+
+const firebaseConfig = {
+    apiKey: window.env.VITE_FIREBASE_API_KEY,
+    authDomain: window.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: window.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: window.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: window.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: window.env.VITE_FIREBASE_APP_ID,
+    measurementId: window.env.VITE_MEASUREMENT_ID
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
