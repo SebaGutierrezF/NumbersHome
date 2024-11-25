@@ -2,6 +2,19 @@
   "extends": "@parcel/config-default",
   "transformers": {
     "*.{js,mjs,jsx,cjs,ts,tsx}": ["@parcel/transformer-js"],
-    "*.{json,json5}": ["@parcel/transformer-json"]
-  }
+    "*.{css,pcss}": ["@parcel/transformer-css"],
+    "*.html": ["@parcel/transformer-html"]
+  },
+  "optimizers": {
+    "*.js": ["@parcel/optimizer-swc"],
+    "*.css": ["@parcel/optimizer-css"],
+    "*.html": ["@parcel/optimizer-htmlnano"]
+  },
+  "packagers": {
+    "*.html": "@parcel/packager-html",
+    "*.js": "@parcel/packager-js",
+    "*.css": "@parcel/packager-css"
+  },
+  "namers": ["@parcel/namer-default"],
+  "reporters": ["@parcel/reporter-dev-server"]
 } 

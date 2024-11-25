@@ -3,6 +3,7 @@ import { collection, query, where, getDocs, addDoc } from 'firebase/firestore/li
 import { translations } from './translations.js';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
+const API_URL = 'https://numbers-home-api.onrender.com';
 let map = null;
 let currentLang = localStorage.getItem('lang') || 'es';
 

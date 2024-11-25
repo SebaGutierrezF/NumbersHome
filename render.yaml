@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: numbers-home-api
+    env: node
+    buildCommand: cd backend && npm install --production
+    startCommand: cd backend && node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CORS_ORIGIN
+        value: https://sebagutierrezf.github.io
+      - key: API_KEY
+        fromSecret: true
+    nodeVersion: 18
