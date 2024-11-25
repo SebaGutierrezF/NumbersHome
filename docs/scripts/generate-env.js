@@ -1,5 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+import { writeFile } from 'fs/promises';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const envContent = `window.env = {
     VITE_FIREBASE_API_KEY: '${process.env.VITE_FIREBASE_API_KEY}',
@@ -9,7 +13,12 @@ const envContent = `window.env = {
     VITE_FIREBASE_MESSAGING_SENDER_ID: '${process.env.VITE_FIREBASE_MESSAGING_SENDER_ID}',
     VITE_FIREBASE_APP_ID: '${process.env.VITE_FIREBASE_APP_ID}',
     VITE_MEASUREMENT_ID: '${process.env.VITE_MEASUREMENT_ID}'
-};`
+};`;
 
-fs.writeFileSync(path.join(__dirname, '../dist/env.js'), envContent);
-console.log('Environment variables generated successfully!');
+try {
+    await writeFile(join(__dirname, '../dist/env.js'), envContent);
+    console.log('Environment variables generated successfully!');
+} catch (error) {
+    console.error('Error generating environment variables:', error);
+    process.exit(1);
+}
