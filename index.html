@@ -4,10 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Number Home</title>
+    <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
-  <script type="module" crossorigin src="/NumbersHome/assets/index-lv2bYAXw.js"></script>
-  <link rel="stylesheet" crossorigin href="/NumbersHome/assets/index-B_eLsGFw.css">
+    <script>
+        // Inicializar window.env con valores por defecto
+        window.env = window.env || {
+            VITE_FIREBASE_API_KEY: '',
+            VITE_FIREBASE_AUTH_DOMAIN: '',
+            VITE_FIREBASE_PROJECT_ID: '',
+            VITE_FIREBASE_STORAGE_BUCKET: '',
+            VITE_FIREBASE_MESSAGING_SENDER_ID: '',
+            VITE_FIREBASE_APP_ID: '',
+            VITE_MEASUREMENT_ID: ''
+        };
+    </script>
+    <script src="env.js"></script>
 </head>
 <body>
     <div class="top-controls">
@@ -40,10 +52,7 @@
         </div>
     </div>
 
-    <script>
-        // Inicializar window.env con valores por defecto
-        window.env = window.env || {};
-    </script>
-    <script src="env.js"></script>
+    <script type="module" src="./firebase-config.js"></script>
+    <script type="module" src="./script.js"></script>
 </body>
 </html>
