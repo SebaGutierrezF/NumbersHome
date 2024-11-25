@@ -1,5 +1,4 @@
-import { db } from './firebase-config';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore/lite';
+import { db, collection, query, where, getDocs, addDoc } from './firebase-config.js';
 import { translations } from './translations.js';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
