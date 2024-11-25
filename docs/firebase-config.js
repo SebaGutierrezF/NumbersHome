@@ -1,5 +1,10 @@
+// Opción 1: Usando node_modules (si estás usando npm)
 import { initializeApp } from './node_modules/firebase/app';
-import "firebase/firestore";
+import { getFirestore } from './node_modules/firebase/firestore';
+
+// Opción 2: Usando CDN (para aplicaciones basadas en navegador)
+// import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+// import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,7 +19,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const db = getFirestore(app);
 
 // Get a list of cities from your database
 async function getCities(db) {
