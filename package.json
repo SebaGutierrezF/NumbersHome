@@ -5,8 +5,8 @@
   "scripts": {
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
-    "build": "vite build docs",
-    "preview": "vite preview docs"
+    "build": "cd docs && vite build",
+    "preview": "cd docs && vite preview"
   },
   "dependencies": {
     "axios": "^1.6.2",
