@@ -1,9 +1,9 @@
-import { writeFile } from 'fs/promises';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+const fs = require('fs');
+const path = require('path');
+const url = require('url');
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const envContent = `window.env = {
     VITE_FIREBASE_API_KEY: '${process.env.VITE_FIREBASE_API_KEY || ""}',
@@ -16,9 +16,8 @@ const envContent = `window.env = {
 };`;
 
 try {
-    // Escribir directamente en el directorio docs
-    const envPath = join(__dirname, '..', 'env.js');
-    await writeFile(envPath, envContent);
+    const envPath = path.join(__dirname, '..', 'env.js');
+    fs.writeFileSync(envPath, envContent);
     console.log('Environment variables generated successfully!');
 } catch (error) {
     console.error('Error generating environment variables:', error);
