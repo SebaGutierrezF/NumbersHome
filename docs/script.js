@@ -227,189 +227,134 @@ document.getElementById('telefonoForm').addEventListener('submit', async functio
     
     const t = translations[currentLang];
     
-    // Validación inicial del formato del teléfono
-    if (!/^\+[0-9]{1,3}[0-9]{4,14}$/.test(telefono)) {
+    console.log('Iniciando búsqueda para:', telefono);
+    
+    try {
+        if (!/^\+[0-9]{1,3}[0-9]{4,14}$/.test(telefono)) {
+            throw new Error('INVALID_FORMAT');
+        }
+        
+        resultado.style.display = 'block';
+        resultado.innerHTML = t.loading;
+        mapContainer.style.display = 'none';
+        
+        try {
+            const querySnapshot = await db.collection('numbers')
+                .where('telefono', '==', telefono)
+                .get();
+            
+            console.log('Respuesta de Firebase:', querySnapshot.empty ? 'No encontrado' : 'Encontrado');
+            
+            let data;
+            if (!querySnapshot.empty) {
+                data = querySnapshot.docs[0].data();
+                console.log('Datos de Firebase:', data);
+            } else {
+                console.log('Iniciando consulta a API externa...');
+                try {
+                    const response = await fetch(`https://api.numlookupapi.com/v1/validate/${telefono}?apikey=${API_KEY}`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`API_ERROR_${response.status}`);
+                    }
+                    
+                    const apiData = await response.json();
+                    console.log('Respuesta de API:', apiData);
+                    
+                    if (apiData.valid) {
+                        data = apiData;
+                        try {
+                            const sanitizedData = sanitizarDatos(data, telefono);
+                            console.log('Datos sanitizados:', sanitizedData);
+                            
+                            const docRef = await addDoc(collection(db, 'numeros'), sanitizedData);
+                            console.log('Guardado en Firebase, ID:', docRef.id);
+                            data = sanitizedData;
+                        } catch (error) {
+                            console.error('Error al guardar en Firebase:', error);
+                            throw new Error('FIREBASE_SAVE_ERROR');
+                        }
+                    } else {
+                        throw new Error('INVALID_PHONE');
+                    }
+                } catch (error) {
+                    console.error('Error en API externa:', error);
+                    throw new Error('API_FETCH_ERROR');
+                }
+            }
+            
+            if (data) {
+                console.log('Procesando datos finales:', data);
+                guardarEnHistorial(telefono);
+                mostrarHistorial();
+                actualizarInterfazConDatos(data, resultado);
+            }
+            
+        } catch (error) {
+            console.error('Error en operación Firebase:', error);
+            throw new Error('FIREBASE_QUERY_ERROR');
+        }
+        
+    } catch (error) {
+        console.error('Error principal:', error.message);
+        let errorMessage = t.processingError;
+        
+        switch(error.message) {
+            case 'INVALID_FORMAT':
+                errorMessage = t.invalidFormat;
+                break;
+            case 'API_FETCH_ERROR':
+                errorMessage = 'Error al consultar la API externa';
+                break;
+            case 'FIREBASE_QUERY_ERROR':
+                errorMessage = 'Error al consultar la base de datos';
+                break;
+            case 'FIREBASE_SAVE_ERROR':
+                errorMessage = 'Error al guardar los datos';
+                break;
+            case 'INVALID_PHONE':
+                errorMessage = 'Número de teléfono no válido';
+                break;
+            case 'API_ERROR_429':
+                errorMessage = 'Límite de API excedido';
+                break;
+            default:
+                errorMessage = `${t.processingError} (${error.message})`;
+        }
+        
         resultado.innerHTML = `
             <h3 class="error">
                 <i class="fas fa-exclamation-triangle"></i>
-                ${t.invalidFormat}
+                ${errorMessage}
             </h3>
         `;
-        return;
     }
-    
-    resultado.style.display = 'block';
-    resultado.innerHTML = t.loading;
-    mapContainer.style.display = 'none';
-    
-    try {
-        // Buscar en Firebase
-        db.collection('numbers')
-          .where('telefono', '==', telefono)
-          .get()
-          .then(querySnapshot => {
-            let data;
+});
 
-            if (!querySnapshot.empty) {
-                data = querySnapshot.docs[0].data();
-                console.log('Datos recuperados de Firebase:', data);
-            } else {
-                console.log('Consultando API externa...');
-                const response = await fetch(`https://api.numlookupapi.com/v1/validate/${telefono}?apikey=${API_KEY}`);
-                const apiData = await response.json();
-                
-                if (apiData.valid) {
-                    data = apiData;
-                    // Guardar en Firebase
-                    try {
-                        const sanitizedData = sanitizarDatos(data, telefono);
-                        console.log('Intentando guardar datos:', sanitizedData);
-                        const docRef = await addDoc(collection(db, 'numeros'), sanitizedData);
-                        console.log('Datos guardados en Firebase con ID:', docRef.id);
-                        data = sanitizedData; // Usar los datos sanitizados para mostrar
-                    } catch (error) {
-                        console.error('Error detallado al guardar en Firebase:', error);
-                    }
-                }
-            }
-
-            // Mostrar resultados
-            if (data && (data.valid || data.telefono)) { // Verificar ambos casos
-                resultado.innerHTML = `
-                    <h3><i class="fas fa-info-circle"></i> ${t.numberInfo} ${telefono}</h3>
-                    <p>
-                        <span><i class="fas fa-globe"></i> ${t.country}</span>
-                        <strong>${data.country_name || t.notAvailable}</strong>
-                    </p>
-                    <p>
-                        <span><i class="fas fa-flag"></i> ${t.countryCode}</span>
-                        <strong>${data.country_code || t.notAvailable}</strong>
-                    </p>
-                    <p>
-                        <span><i class="fas fa-map-marker-alt"></i> ${t.location}</span>
-                        <strong>${data.location || t.notAvailable}</strong>
-                    </p>
-                    <p>
-                        <span><i class="fas fa-phone"></i> ${t.localFormat}</span>
-                        <strong>${data.local_format || t.notAvailable}</strong>
-                    </p>
-                    <p>
-                        <span><i class="fas fa-building"></i> ${t.carrier}</span>
-                        <strong>${data.carrier || t.notAvailable}</strong>
-                    </p>
-                `;
-
-                // Obtener la consulta de ubicación
-                const locationQuery = getLocationQuery(data);
-
-                if (locationQuery) {
-                    try {
-                        console.log('Buscando coordenadas para:', locationQuery);
-                        const geocodeResponse = await fetch(
-                            `https://nominatim.openstreetmap.org/search?` + 
-                            `format=json&q=${encodeURIComponent(locationQuery)}&limit=1`
-                        );
-                        const geocodeData = await geocodeResponse.json();
-
-                        if (geocodeData && geocodeData.length > 0) {
-                            const { lat, lon } = geocodeData[0];
-                            console.log('Coordenadas encontradas:', lat, lon);
-                            
-                            mapContainer.style.display = 'block';
-
-                            if (map) {
-                                map.remove();
-                                map = null;
-                            }
-
-                            setTimeout(() => {
-                                try {
-                                    map = L.map('map', {
-                                        zoomControl: true,
-                                        scrollWheelZoom: true
-                                    }).setView([lat, lon], 6);
-                                    
-                                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                        attribution: '© OpenStreetMap contributors'
-                                    }).addTo(map);
-
-                                    L.marker([lat, lon])
-                                        .addTo(map)
-                                        .bindPopup(locationQuery)
-                                        .openPopup();
-
-                                    map.invalidateSize();
-                                    console.log('Mapa inicializado correctamente');
-                                } catch (mapError) {
-                                    console.error('Error al inicializar el mapa:', mapError);
-                                }
-                            }, 300);
-                        } else {
-                            console.log('No se encontraron coordenadas específicas, intentando con el país');
-                            // Intenta buscar solo el país si no se encontraron coordenadas específicas
-                            if (data.country_name && data.country_name !== 'No disponible') {
-                                const countryResponse = await fetch(
-                                    `https://nominatim.openstreetmap.org/search?` +
-                                    `format=json&q=${encodeURIComponent(data.country_name)}&limit=1`
-                                );
-                                const countryData = await countryResponse.json();
-
-                                if (countryData && countryData.length > 0) {
-                                    const { lat, lon } = countryData[0];
-                                    // ... código del mapa igual que arriba ...
-                                    mapContainer.style.display = 'block';
-
-                                    if (map) {
-                                        map.remove();
-                                        map = null;
-                                    }
-
-                                    setTimeout(() => {
-                                        map = L.map('map', {
-                                            zoomControl: true,
-                                            scrollWheelZoom: true
-                                        }).setView([lat, lon], 4); // Zoom más alejado para países
-                                        
-                                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                            attribution: '© OpenStreetMap contributors'
-                                        }).addTo(map);
-
-                                        L.marker([lat, lon])
-                                            .addTo(map)
-                                            .bindPopup(data.country_name)
-                                            .openPopup();
-
-                                        map.invalidateSize();
-                                    }, 300);
-                                }
-                            } else {
-                                console.log('No hay datos de ubicación suficientes para mostrar el mapa');
-                                mapContainer.style.display = 'none';
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Error al obtener coordenadas:', error);
-                        mapContainer.style.display = 'none';
-                    }
-                } else {
-                    console.log('No hay datos de ubicación válidos para mostrar el mapa');
-                    mapContainer.style.display = 'none';
-                }
-            } else {
-                resultado.innerHTML = `
-                    <h3 class="error">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        ${t.invalidNumber}
-                    </h3>
-                `;
-            }
-        })
-        .catch(error => {
-            console.error('Error en la operación:', error);
-            resultado.innerHTML = t.processingError;
-        });
-    } catch (error) {
-        console.error('Error general:', error);
-        resultado.innerHTML = t.error;
-    }
-}); 
+// Función para actualizar la interfaz con los datos
+function actualizarInterfazConDatos(data, resultado) {
+    const t = translations[currentLang];
+    resultado.innerHTML = `
+        <h3><i class="fas fa-info-circle"></i> ${t.numberInfo} ${data.telefono}</h3>
+        <p>
+            <span><i class="fas fa-globe"></i> ${t.country}</span>
+            <strong>${data.country_name}</strong>
+        </p>
+        <p>
+            <span><i class="fas fa-flag"></i> ${t.countryCode}</span>
+            <strong>${data.country_code}</strong>
+        </p>
+        <p>
+            <span><i class="fas fa-map-marker-alt"></i> ${t.location}</span>
+            <strong>${data.location}</strong>
+        </p>
+        <p>
+            <span><i class="fas fa-phone"></i> ${t.localFormat}</span>
+            <strong>${data.local_format}</strong>
+        </p>
+        <p>
+            <span><i class="fas fa-building"></i> ${t.carrier}</span>
+            <strong>${data.carrier}</strong>
+        </p>
+    `;
+} 
