@@ -9,10 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "firebase": "^10.7.0",
+    "firebase": "^10.14.1",
     "leaflet": "^1.9.4"
   },
   "devDependencies": {
     "vite": "^5.0.0"
   }
-} 
+}
