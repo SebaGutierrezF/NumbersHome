@@ -1,4 +1,4 @@
-import { writeFile, mkdir } from 'fs/promises';
+import { writeFile } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -16,14 +16,9 @@ const envContent = `window.env = {
 };`;
 
 try {
-    const distPath = join(__dirname, '../dist');
-    try {
-        await mkdir(distPath, { recursive: true });
-    } catch (err) {
-        if (err.code !== 'EEXIST') throw err;
-    }
-    
-    await writeFile(join(distPath, 'env.js'), envContent);
+    // Escribir directamente en el directorio docs
+    const envPath = join(__dirname, '..', 'env.js');
+    await writeFile(envPath, envContent);
     console.log('Environment variables generated successfully!');
 } catch (error) {
     console.error('Error generating environment variables:', error);
