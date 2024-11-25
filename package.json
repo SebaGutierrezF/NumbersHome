@@ -1,18 +1,23 @@
 {
-  "name": "number-home-frontend",
+  "name": "number-home",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "backend",
+    "docs"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "firebase": "^9.23.0",
-    "leaflet": "^1.9.4"
+    "start": "cd backend && npm start",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd docs && npm run dev",
+    "build": "cd docs && npm run build",
+    "install:all": "npm install && npm run install:backend && npm run install:frontend",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd docs && npm install"
   },
   "devDependencies": {
-    "vite": "^5.0.0"
+    "concurrently": "^8.2.2"
   }
 }
 
