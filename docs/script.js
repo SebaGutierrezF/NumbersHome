@@ -1,5 +1,5 @@
-import { db, queryFirebase, saveToFirebase } from '/firebase-config.js';
-import { translations } from '/translations.js';
+import { db, queryFirebase, saveToFirebase } from './firebase-config.js';
+import { translations } from '.translations.js';
 import { validatePhoneWithAPI } from './services/phoneService.js';
 import { sanitizarDatos, validarTelefono } from './utils/dataUtils.js';
 import { guardarEnHistorial, mostrarHistorial } from './utils/historyUtils.js';
