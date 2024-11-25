@@ -11,3 +11,4 @@ services:
         value: https://sebagutierrezf.github.io
       - key: API_KEY
         fromSecret: true
+    runtime: "node/20"
