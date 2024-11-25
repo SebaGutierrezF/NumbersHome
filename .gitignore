@@ -52,3 +52,17 @@ package-lock.json
 *.gif binary
 *.ico binary
 *.pdf binary
+
+# Firebase config y credenciales
+firebase-config.js
+firebaseConfig.js
+**/firebase-credentials.*
+
+# API Keys y configuraciones sensibles
+config.js
+**/api-keys.*
+**/credentials.*
+
+# Archivos de caché
+.cache/
+*.cache

@@ -1,5 +1,5 @@
-import { db } from './firebase-config.js';
-import { translations } from './translations.js';
+import { db } from '/firebase-config.js';
+import { translations } from '/translations.js';
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 const API_URL = 'https://numbers-home-api.onrender.com';
@@ -227,76 +227,69 @@ document.getElementById('telefonoForm').addEventListener('submit', async functio
     
     const t = translations[currentLang];
     
-    console.log('Iniciando búsqueda para:', telefono);
+    // Validación inicial
+    const validacion = validarTelefono(telefono);
+    if (!validacion.valido) {
+        resultado.innerHTML = `
+            <h3 class="error">
+                <i class="fas fa-exclamation-triangle"></i>
+                ${validacion.mensaje}
+            </h3>
+        `;
+        return;
+    }
     
     try {
-        if (!/^\+[0-9]{1,3}[0-9]{4,14}$/.test(telefono)) {
-            throw new Error('INVALID_FORMAT');
-        }
-        
         resultado.style.display = 'block';
         resultado.innerHTML = t.loading;
         mapContainer.style.display = 'none';
         
-        try {
-            const querySnapshot = await db.collection('numbers')
-                .where('telefono', '==', telefono)
-                .get();
+        // Búsqueda en Firebase
+        const querySnapshot = await db.collection('numbers')
+            .where('telefono', '==', telefono)
+            .get();
+        
+        let data;
+        if (!querySnapshot.empty) {
+            data = querySnapshot.docs[0].data();
+            console.log('Datos recuperados de Firebase:', data);
+        } else {
+            // Consulta API externa
+            const response = await fetch(`${API_URL}/validate/${telefono}`);
+            if (!response.ok) {
+                throw new Error(`API_ERROR_${response.status}`);
+            }
             
-            console.log('Respuesta de Firebase:', querySnapshot.empty ? 'No encontrado' : 'Encontrado');
-            
-            let data;
-            if (!querySnapshot.empty) {
-                data = querySnapshot.docs[0].data();
-                console.log('Datos de Firebase:', data);
+            const apiData = await response.json();
+            if (apiData.valid) {
+                data = apiData;
+                // Guardar en Firebase
+                const sanitizedData = sanitizarDatos(data, telefono);
+                await db.collection('numbers').add(sanitizedData);
+                data = sanitizedData;
             } else {
-                console.log('Iniciando consulta a API externa...');
-                try {
-                    const response = await fetch(`https://api.numlookupapi.com/v1/validate/${telefono}?apikey=${API_KEY}`);
-                    
-                    if (!response.ok) {
-                        throw new Error(`API_ERROR_${response.status}`);
-                    }
-                    
-                    const apiData = await response.json();
-                    console.log('Respuesta de API:', apiData);
-                    
-                    if (apiData.valid) {
-                        data = apiData;
-                        try {
-                            const sanitizedData = sanitizarDatos(data, telefono);
-                            console.log('Datos sanitizados:', sanitizedData);
-                            
-                            const docRef = await addDoc(collection(db, 'numeros'), sanitizedData);
-                            console.log('Guardado en Firebase, ID:', docRef.id);
-                            data = sanitizedData;
-                        } catch (error) {
-                            console.error('Error al guardar en Firebase:', error);
-                            throw new Error('FIREBASE_SAVE_ERROR');
-                        }
-                    } else {
-                        throw new Error('INVALID_PHONE');
-                    }
-                } catch (error) {
-                    console.error('Error en API externa:', error);
-                    throw new Error('API_FETCH_ERROR');
-                }
+                throw new Error('INVALID_PHONE');
+            }
+        }
+        
+        if (data) {
+            // Guardar en historial y actualizar UI
+            guardarEnHistorial(telefono);
+            mostrarHistorial();
+            actualizarInterfazConDatos(data, resultado);
+            
+            // Actualizar mapa si hay ubicación
+            const locationQuery = getLocationQuery(data);
+            if (locationQuery && mapContainer) {
+                mapContainer.style.display = 'block';
+                // Aquí iría la lógica del mapa si la tienes implementada
             }
             
-            if (data) {
-                console.log('Procesando datos finales:', data);
-                guardarEnHistorial(telefono);
-                mostrarHistorial();
-                actualizarInterfazConDatos(data, resultado);
-            }
-            
-        } catch (error) {
-            console.error('Error en operación Firebase:', error);
-            throw new Error('FIREBASE_QUERY_ERROR');
+            mostrarNotificacion(t.searchSuccess, 'success');
         }
         
     } catch (error) {
-        console.error('Error principal:', error.message);
+        console.error('Error:', error);
         let errorMessage = t.processingError;
         
         switch(error.message) {
@@ -304,19 +297,16 @@ document.getElementById('telefonoForm').addEventListener('submit', async functio
                 errorMessage = t.invalidFormat;
                 break;
             case 'API_FETCH_ERROR':
-                errorMessage = 'Error al consultar la API externa';
+                errorMessage = t.apiError;
                 break;
             case 'FIREBASE_QUERY_ERROR':
-                errorMessage = 'Error al consultar la base de datos';
-                break;
-            case 'FIREBASE_SAVE_ERROR':
-                errorMessage = 'Error al guardar los datos';
+                errorMessage = t.databaseError;
                 break;
             case 'INVALID_PHONE':
-                errorMessage = 'Número de teléfono no válido';
+                errorMessage = t.invalidPhone;
                 break;
             case 'API_ERROR_429':
-                errorMessage = 'Límite de API excedido';
+                errorMessage = t.apiLimitExceeded;
                 break;
             default:
                 errorMessage = `${t.processingError} (${error.message})`;
@@ -328,8 +318,16 @@ document.getElementById('telefonoForm').addEventListener('submit', async functio
                 ${errorMessage}
             </h3>
         `;
+        
+        mostrarNotificacion(errorMessage, 'error');
     }
 });
+
+// Función para consultar número desde el historial
+function consultarNumero(telefono) {
+    document.getElementById('telefono').value = telefono;
+    document.getElementById('telefonoForm').dispatchEvent(new Event('submit'));
+}
 
 // Función para actualizar la interfaz con los datos
 function actualizarInterfazConDatos(data, resultado) {
