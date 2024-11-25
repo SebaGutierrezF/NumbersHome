@@ -1,5 +1,7 @@
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -12,33 +14,14 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_MEASUREMENT_ID
 };
 
-// Inicializar Firebase
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Funciones de utilidad para Firebase
-export const saveToFirebase = async (collectionName, data) => {
-    try {
-        const docRef = await addDoc(collection(db, collectionName), data);
-        return { success: true, id: docRef.id };
-    } catch (error) {
-        console.error('Error saving to Firebase:', error);
-        return { success: false, error };
-    }
-};
-
-export const queryFirebase = async (collectionName, field, value) => {
-    try {
-        const q = query(
-            collection(db, collectionName),
-            where(field, '==', value)
-        );
-        const querySnapshot = await getDocs(q);
-        return { success: true, data: querySnapshot };
-    } catch (error) {
-        console.error('Error querying Firebase:', error);
-        return { success: false, error };
-    }
-};
-
-export { db };
+// Get a list of cities from your database
+async function getCities(db) {
+  const citiesCol = collection(db, 'cities');
+  const citySnapshot = await getDocs(citiesCol);
+  const cityList = citySnapshot.docs.map(doc => doc.data());
+  return cityList;
+}
