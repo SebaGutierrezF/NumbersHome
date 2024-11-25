@@ -2,11 +2,30 @@ services:
   - type: web
     name: numbers-home-api
     env: node
-    buildCommand: cd backend && npm install
+    buildCommand: |
+      npm install
+      cd docs && npm install
+      npm run build
     startCommand: cd backend && node server.js
     envVars:
       - key: NODE_ENV
         value: production
       - key: CORS_ORIGIN
         value: https://sebagutierrezf.github.io
+      - key: VITE_FIREBASE_API_KEY
+        sync: false
+      - key: VITE_FIREBASE_AUTH_DOMAIN
+        sync: false
+      - key: VITE_FIREBASE_DATABASE_URL
+        sync: false
+      - key: VITE_FIREBASE_PROJECT_ID
+        sync: false
+      - key: VITE_FIREBASE_STORAGE_BUCKET
+        sync: false
+      - key: VITE_FIREBASE_MESSAGING_SENDER_ID
+        sync: false
+      - key: VITE_FIREBASE_APP_ID
+        sync: false
+      - key: VITE_MEASUREMENT_ID
+        sync: false
     runtime: "node/20"
