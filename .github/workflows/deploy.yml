@@ -19,21 +19,13 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Debug Directory
-        run: |
-          pwd
-          ls -la
-
       - name: Install Dependencies
-        run: |
-          npm install
-          cd docs
-          npm install vite
+        working-directory: docs
+        run: npm install
 
       - name: Build
-        run: |
-          cd docs
-          npx vite build
+        working-directory: docs
+        run: npm run build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
@@ -43,12 +35,6 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
           VITE_MEASUREMENT_ID: ${{ secrets.VITE_MEASUREMENT_ID }}
           VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
-
-      - name: Debug Build Output
-        run: |
-          ls -la
-          ls -la dist || echo "dist directory not found in root"
-          ls -la docs/dist || echo "dist directory not found in docs"
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
