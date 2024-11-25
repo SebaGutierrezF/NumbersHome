@@ -4,27 +4,26 @@ on:
   push:
     branches: [ main ]
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
 
       - name: Install Dependencies
-        run: |
-          cd docs
-          npm install
+        run: npm install
 
       - name: Build
-        run: |
-          cd docs
-          npm run build
+        run: npm run build
         env:
           VITE_API_KEY: ${{ secrets.VITE_API_KEY }}
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
@@ -38,5 +37,5 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: docs/dist
-          branch: gh-pages 
+          folder: dist
+          branch: gh-pages
