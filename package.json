@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node backend/server.js",
-    "dev:server": "nodemon backend/server.js",
+    "start": "node docs/server/server.js",
+    "dev:server": "nodemon docs/server/server.js",
     "dev:client": "cd docs && vite",
     "build": "cd docs && vite build",
     "preview": "cd docs && vite preview"
