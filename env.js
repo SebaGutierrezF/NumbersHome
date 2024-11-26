@@ -1,6 +1,6 @@
 // Este archivo es generado automáticamente durante el deploy
 // No editar manualmente
-window.env = {
+window.secrets = {
   VITE_FIREBASE_API_KEY: "AIzaSyDFDboBtIOwhX6QYker19RlTPhDmEAakMY",
   VITE_FIREBASE_AUTH_DOMAIN: "numberhome-5ad7c.firebaseapp.com",
   VITE_FIREBASE_PROJECT_ID: "numberhome-5ad7c",

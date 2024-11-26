@@ -1,53 +1,29 @@
 // Importaciones usando CDN para GitHub Pages
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, addDoc, query, where, orderBy, limit } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
-// Función para obtener las variables de entorno
-function getEnvConfig() {
-    // Intentar obtener las variables de window.env (para GitHub Pages)
-    if (window.env) {
-        return {
-            apiKey: window.env.VITE_FIREBASE_API_KEY,
-            authDomain: window.env.VITE_FIREBASE_AUTH_DOMAIN,
-            projectId: window.env.VITE_FIREBASE_PROJECT_ID,
-            storageBucket: window.env.VITE_FIREBASE_STORAGE_BUCKET,
-            messagingSenderId: window.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-            appId: window.env.VITE_FIREBASE_APP_ID,
-            measurementId: window.env.VITE_MEASUREMENT_ID
-        };
-    }
-    
-    // Si no está window.env, usar import.meta.env (para desarrollo local)
-    return {
-        apiKey: secrets.VITE_FIREBASE_API_KEY,
-        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-        appId: import.meta.env.VITE_FIREBASE_APP_ID,
-        measurementId: import.meta.env.VITE_MEASUREMENT_ID
-    };
-}
+// Obtener configuración de Firebase desde las variables de entorno
+const firebaseConfig = {
+    apiKey: secrets.VITE_FIREBASE_API_KEY,
+    authDomain: secrets.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: secrets.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: secrets.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: secrets.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: secrets.VITE_FIREBASE_APP_ID,
+    measurementId: secrets.VITE_MEASUREMENT_ID
+};
 
-const firebaseConfig = getEnvConfig();
+// Inicializar Firebase
+const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase
-let app;
-let db;
+// Exportar los servicios que necesitas
+const auth = getAuth(app);
+const db = getFirestore(app);
+const storage = getStorage(app);
 
-try {
-    if (!firebaseConfig.projectId) {
-        throw new Error('Firebase Project ID is missing');
-    }
-    app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    console.log('Firebase initialized successfully');
-} catch (error) {
-    console.error('Error initializing Firebase:', error);
-    throw error;
-}
-
-export { db };
+export { app, auth, db, storage };
 
 // Función para guardar datos en Firebase
 export async function saveToFirebase(data) {
