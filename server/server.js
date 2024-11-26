@@ -48,32 +48,23 @@ const validatePhoneNumber = async (phoneNumber) => {
 app.post('/api/phone', async (req, res) => {
     try {
         const { phoneNumber } = req.body;
+        const validationData = await validatePhoneNumber(phoneNumber);
         
-        if (!phoneNumber) {
-            return res.status(400).json({ 
-                error: 'Bad Request',
-                message: 'Phone number is required' 
-            });
-        }
-
-        const data = await validatePhoneNumber(phoneNumber);
-        res.json(data);
+        res.json({
+            message: 'Phone number validated',
+            data: validationData
+        });
     } catch (error) {
         console.error('Error processing request:', error);
-        res.status(500).json({ 
-            error: 'Internal Server Error',
-            message: 'Error processing the request',
-            details: error.message 
+        res.status(500).json({
+            error: error.message
         });
     }
 });
 
+// Health check endpoint
 app.get('/health', (req, res) => {
-    res.json({ 
-        status: 'OK', 
-        message: 'Server is running',
-        timestamp: new Date().toISOString()
-    });
+    res.json({ status: 'ok', timestamp: new Date() });
 });
 
 // Manejo de errores global
@@ -88,5 +79,5 @@ app.use((err, req, res, next) => {
 // Iniciar servidor
 app.listen(config.port, () => {
     console.log(`Server running on port ${config.port}`);
-    console.log(`CORS enabled for origin: ${config.corsOrigin}`);
+    console.log(`CORS origin: ${config.corsOrigin}`);
 });
