@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script type="module" crossorigin src="/assets/index-B6oJKyp3.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/index-B_eLsGFw.css">
+</head>
+<body>
+    <div class="top-controls">
+        <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+            <i class="fas fa-sun"></i>
+        </button>
+        <button class="lang-toggle" id="langToggle" aria-label="Change language">
+            <i class="fas fa-globe"></i>
+            <span>ES</span>
+        </button>
+    </div>
+
+    <h1><i class="fas fa-phone-alt"></i> <span id="title">Consulta el origen del número telefónico</span></h1>
+    
+    <form id="telefonoForm">
+        <input type="tel" 
+               id="telefono" 
+               placeholder="Ingresa el número telefónico con código de país (ej: +34612345678)" 
+               pattern="[+0-9]+" 
+               required>
+        <button type="submit">
+            <i class="fas fa-search"></i> Consultar
+        </button>
+    </form>
+
+    <div class="resultado-container">
+        <div id="resultado" class="resultado"></div>
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,9 +1,0 @@
-window.env = {
-  VITE_FIREBASE_API_KEY: "AIzaSyDFDboBtIOwhX6QYker19RlTPhDmEAakMY",
-  VITE_FIREBASE_AUTH_DOMAIN: "numberhome-5ad7c.firebaseapp.com",
-  VITE_FIREBASE_PROJECT_ID: "numberhome-5ad7c",
-  VITE_FIREBASE_STORAGE_BUCKET: "numberhome-5ad7c.firebasestorage.app",
-  VITE_FIREBASE_MESSAGING_SENDER_ID: "155611891211",
-  VITE_FIREBASE_APP_ID: "1:155611891211:web:7bad7e2de46af2abb4290e",
-  VITE_MEASUREMENT_ID: "G-MXXVWCLLBD"
-};
