@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Numbers Home - Validación de Números</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="/src/styles/main.css">
+    <link rel="stylesheet" href="./src/styles/main.css">
 </head>
 <body>
     <div class="container">
@@ -21,60 +21,6 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script type="module" src="/src/services/api.js"></script>
-    <script type="module">
-        import { validatePhoneNumber } from '/src/services/api.js';
-
-        const phoneInput = document.getElementById('phoneInput');
-        const validateBtn = document.getElementById('validateBtn');
-        const resultDiv = document.getElementById('result');
-        let map;
-
-        // Inicializar mapa
-        map = L.map('map').setView([0, 0], 2);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: ' OpenStreetMap contributors'
-        }).addTo(map);
-
-        validateBtn.addEventListener('click', async () => {
-            const phoneNumber = phoneInput.value.trim();
-            if (!phoneNumber) {
-                showError('Por favor ingresa un número telefónico');
-                return;
-            }
-
-            try {
-                validateBtn.disabled = true;
-                const result = await validatePhoneNumber(phoneNumber);
-                showResult(result);
-            } catch (error) {
-                showError(error.message);
-            } finally {
-                validateBtn.disabled = false;
-            }
-        });
-
-        function showResult(data) {
-            resultDiv.className = 'result success';
-            resultDiv.innerHTML = `
-                <h3>Resultado de la validación:</h3>
-                <p>País: ${data.country_name}</p>
-                <p>Código de país: ${data.country_code}</p>
-                <p>Operador: ${data.carrier}</p>
-                <p>Tipo de línea: ${data.line_type}</p>
-                <p>Válido: ${data.valid ? 'Sí' : 'No'}</p>
-            `;
-
-            if (data.location) {
-                map.setView([data.location.latitude, data.location.longitude], 13);
-                L.marker([data.location.latitude, data.location.longitude]).addTo(map);
-            }
-        }
-
-        function showError(message) {
-            resultDiv.className = 'result error';
-            resultDiv.textContent = `Error: ${message}`;
-        }
-    </script>
+    <script type="module" src="./src/main.js"></script>
 </body>
 </html>

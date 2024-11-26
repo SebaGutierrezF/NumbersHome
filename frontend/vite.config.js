@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   root: '.',
+  base: '/NumberHome/', // Nombre de tu repositorio
   build: {
     outDir: 'dist',
     emptyOutDir: true,
