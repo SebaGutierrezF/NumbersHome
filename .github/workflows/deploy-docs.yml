@@ -10,13 +10,17 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment: github-pages
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Generate env.js
         run: |
+          # Crear el archivo env.js con las variables de entorno
           cat > docs/env.js << 'EOL'
+          // Este archivo es generado automáticamente durante el deploy
+          // No editar manualmente
           window.env = {
             VITE_FIREBASE_API_KEY: "${{ secrets.VITE_FIREBASE_API_KEY }}",
             VITE_FIREBASE_AUTH_DOMAIN: "${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}",
@@ -27,6 +31,12 @@ jobs:
             VITE_MEASUREMENT_ID: "${{ secrets.VITE_MEASUREMENT_ID }}"
           };
           EOL
+
+          # Verificar que el archivo se creó correctamente
+          if [ ! -f docs/env.js ]; then
+            echo "Error: env.js no se pudo crear"
+            exit 1
+          fi
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
