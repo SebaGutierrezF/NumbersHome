@@ -4,7 +4,7 @@ import { getFirestore, collection, getDocs, addDoc, query, where, orderBy, limit
 
 // Función para obtener las variables de entorno
 function getEnvConfig() {
-    if (!window.env) {
+    if (!process.env) {
         console.error('Environment variables not found. Please make sure you have configured the GitHub secrets.');
         throw new Error('Missing environment configuration');
     }
