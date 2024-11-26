@@ -1,5 +1,5 @@
 import { validatePhoneNumber } from './services/api.js';
-import './styles/styke.css';
+import './styles/styles.css';
 
 // Inicializar la aplicación
 document.addEventListener('DOMContentLoaded', () => {
