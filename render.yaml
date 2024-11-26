@@ -2,13 +2,17 @@ services:
   - type: web
     name: numbers-home-api
     env: node
-    buildCommand: npm install
-    startCommand: npm start
+    region: ohio
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
     envVars:
-      - key: NODE_ENV
-        value: production
+      - key: NODE_VERSION
+        value: 20.0.0
+      - key: PORT
+        value: 3000
       - key: CORS_ORIGIN
-        value: https://sebagutierrezf.github.io
+        sync: false
       - key: API_KEY
         sync: false
-    runtime: "node/20"
+      - key: FIREBASE_SERVICE_ACCOUNT
+        sync: false

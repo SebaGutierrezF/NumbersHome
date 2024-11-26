@@ -1,8 +1,8 @@
 import { db, queryFirebase, saveToFirebase } from './firebase-config.js';
 import { translations } from './translations.js';
-import { validatePhoneWithAPI } from './services/phoneService.js';
-import { sanitizarDatos, validarTelefono } from './utils/dataUtils.js';
-import { guardarEnHistorial, mostrarHistorial } from './utils/historyUtils.js';
+import { validatePhoneWithAPI } from '../../../backend/src/controllers/phoneService.js';
+import { sanitizarDatos, validarTelefono } from '../components/dataUtils.js';
+import { guardarEnHistorial, mostrarHistorial } from '../components/historyUtils.js';
 
 let currentLang = localStorage.getItem('lang') || 'es';
 

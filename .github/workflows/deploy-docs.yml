@@ -2,18 +2,17 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main ]
-
-permissions:
-  contents: write
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    environment: github-pages
+    
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -23,37 +22,29 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          npm ci
-          cd docs && npm ci
+          cd frontend
+          npm install
 
-      - name: Generate env.js
+      - name: Generate Environment File
         run: |
-          # Crear el archivo env.js con las variables de entorno
-          cat > docs/env.js << 'EOL'
-          // Este archivo es generado automáticamente durante el deploy
-          // No editar manualmente
-          window.secrets = {
-            VITE_FIREBASE_API_KEY: "${{ secrets.VITE_FIREBASE_API_KEY }}",
-            VITE_FIREBASE_AUTH_DOMAIN: "${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}",
-            VITE_FIREBASE_PROJECT_ID: "${{ secrets.VITE_FIREBASE_PROJECT_ID }}",
-            VITE_FIREBASE_STORAGE_BUCKET: "${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}",
-            VITE_FIREBASE_MESSAGING_SENDER_ID: "${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}",
-            VITE_FIREBASE_APP_ID: "${{ secrets.VITE_FIREBASE_APP_ID }}",
-            VITE_MEASUREMENT_ID: "${{ secrets.VITE_MEASUREMENT_ID }}"
-          };
-          EOL
-
-          # Verificar que el archivo se creó correctamente
-          if [ ! -f docs/env.js ]; then
-            echo "Error: env.js no se pudo crear"
-            exit 1
-          fi
+          cd frontend
+          echo "window.secrets = {
+            VITE_FIREBASE_API_KEY: '${{ secrets.VITE_FIREBASE_API_KEY }}',
+            VITE_FIREBASE_AUTH_DOMAIN: '${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}',
+            VITE_FIREBASE_PROJECT_ID: '${{ secrets.VITE_FIREBASE_PROJECT_ID }}',
+            VITE_FIREBASE_STORAGE_BUCKET: '${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}',
+            VITE_FIREBASE_MESSAGING_SENDER_ID: '${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}',
+            VITE_FIREBASE_APP_ID: '${{ secrets.VITE_FIREBASE_APP_ID }}',
+            VITE_MEASUREMENT_ID: '${{ secrets.VITE_MEASUREMENT_ID }}'
+          }" > public/env.js
 
       - name: Build
-        run: npm run build
+        run: |
+          cd frontend
+          npm run build
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: docs/dist
           branch: gh-pages
+          folder: frontend/dist
