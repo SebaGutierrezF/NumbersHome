@@ -1,10 +1,11 @@
 // Importaciones usando CDN para GitHub Pages
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, collection, getDocs, addDoc, query, where, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+require('dotenv').config();
 
 // Función para obtener las variables de entorno
 function getEnvConfig() {
-    if (!window.env) {
+    if (!process.env) {
         console.error('Environment variables not found. Please make sure you have configured the GitHub secrets.');
         throw new Error('Missing environment configuration');
     }
