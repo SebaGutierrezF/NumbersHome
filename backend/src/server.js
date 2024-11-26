@@ -1,70 +1,49 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
-import path from 'path';
+import { dirname, join } from 'path';
 import { validatePhone } from './controllers/phone.js';
+import { initializeFirebase } from './config/firebase.js';
+import { logger } from './utils/logger.js';
 
-// Configuración de ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Cargar variables de entorno
+// Configurar variables de entorno
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const isDevelopment = process.env.NODE_ENV === 'development';
+const port = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.json());
+// Configurar CORS
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     methods: ['GET', 'POST'],
-    credentials: true
+    allowedHeaders: ['Content-Type']
 }));
 
-// API Routes
-app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'ok',
-        environment: process.env.NODE_ENV || 'production',
-        timestamp: new Date().toISOString(),
-        cors: process.env.CORS_ORIGIN || '*'
-    });
-});
+// Middleware para parsear JSON
+app.use(express.json());
 
-app.post('/api/phone', validatePhone);
-
-// Error handling para API
-app.use('/api', (err, req, res, next) => {
-    console.error('API Error:', err.stack);
-    res.status(err.status || 500).json({
-        error: err.message || 'Something went wrong!',
-        status: err.status || 500
-    });
-});
-
-// Servir archivos estáticos y manejar SPA
-if (!isDevelopment) {
-    // Servir archivos estáticos desde el directorio dist
-    const staticPath = path.join(__dirname, '../../frontend/dist');
-    console.log('Serving static files from:', staticPath);
-    app.use(express.static(staticPath));
-
-    // Manejar todas las rutas no-API para SPA
-    app.get('*', (req, res) => {
-        if (!req.path.startsWith('/api')) {
-            res.sendFile(path.join(staticPath, 'index.html'));
-        }
-    });
+// Inicializar Firebase
+try {
+    initializeFirebase();
+    logger.info('Firebase inicializado correctamente');
+} catch (error) {
+    logger.error('Error al inicializar Firebase:', error);
+    process.exit(1);
 }
 
+// Rutas
+app.post('/api/validate', validatePhone);
+
+// Manejo de errores global
+app.use((err, req, res, next) => {
+    logger.error('Error no manejado:', err);
+    res.status(500).json({
+        error: 'Error interno del servidor'
+    });
+});
+
 // Iniciar servidor
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'production'} mode`);
-    console.log(`API Health check: http://localhost:${PORT}/api/health`);
-    console.log(`CORS Origin: ${process.env.CORS_ORIGIN || '*'}`);
-    console.log(`Static files path: ${!isDevelopment ? path.join(__dirname, '../../frontend/dist') : 'Not serving in development'}`);
+app.listen(port, () => {
+    logger.info(`Servidor escuchando en puerto ${port}`);
 });

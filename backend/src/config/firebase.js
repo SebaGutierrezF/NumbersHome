@@ -1,6 +1,7 @@
 // firebase.js
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
+import { logger } from '../utils/logger.js';
 
 let db = null;
 
@@ -10,7 +11,9 @@ export function initializeFirebase() {
             throw new Error('FIREBASE_SERVICE_ACCOUNT environment variable is not set');
         }
 
-        const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+        // Decodificar el string base64 a JSON
+        const base64Decoded = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT, 'base64').toString('utf-8');
+        const serviceAccount = JSON.parse(base64Decoded);
         
         if (!serviceAccount.project_id || !serviceAccount.private_key || !serviceAccount.client_email) {
             throw new Error('Invalid Firebase service account configuration');
@@ -21,9 +24,9 @@ export function initializeFirebase() {
         });
 
         db = getFirestore(app);
-        console.log('Firebase initialized successfully for project:', serviceAccount.project_id);
+        logger.info('Firebase initialized successfully for project:', serviceAccount.project_id);
     } catch (error) {
-        console.error('Error initializing Firebase:', error);
+        logger.error('Error initializing Firebase:', error);
         throw error;
     }
 }

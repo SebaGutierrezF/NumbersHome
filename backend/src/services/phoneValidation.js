@@ -1,16 +1,22 @@
 import axios from 'axios';
 import { getDb } from '../config/firebase.js';
+import { logger } from '../utils/logger.js';
 
 export async function validatePhoneNumber(phoneNumber) {
     try {
+        logger.debug('Validando número con API externa:', phoneNumber);
         const response = await axios.get(
             `https://api.numlookupapi.com/v1/validate/${phoneNumber}`,
             {
-                headers: {
-                    'apikey': process.env.NUMLOOKUP_API_KEY
+                params: {
+                    apikey: process.env.NUMLOOKUP_API_KEY
                 }
             }
         );
+
+        if (!response.data) {
+            throw new Error('No se recibió respuesta del servicio de validación');
+        }
 
         return {
             valid: response.data.valid,
@@ -19,10 +25,11 @@ export async function validatePhoneNumber(phoneNumber) {
                 lat: response.data.location?.latitude,
                 lng: response.data.location?.longitude
             },
-            phoneNumber: phoneNumber
+            phoneNumber: phoneNumber,
+            timestamp: new Date().toISOString()
         };
     } catch (error) {
-        console.error('Error validating phone number:', error);
+        logger.error('Error validando número con API externa:', error);
         throw new Error('Error al validar el número con el servicio externo');
     }
 }
@@ -35,9 +42,9 @@ export async function saveValidationToFirebase(data) {
             ...data,
             timestamp: new Date()
         });
-        console.log('Validation saved to Firebase');
+        logger.info('Validación guardada en Firebase');
     } catch (error) {
-        console.error('Error saving to Firebase:', error);
+        logger.error('Error guardando en Firebase:', error);
         // No lanzamos el error para que no afecte la respuesta al usuario
     }
 }
@@ -53,14 +60,18 @@ export async function getValidationFromFirebase(phoneNumber) {
         
         const querySnapshot = await q.get();
         if (!querySnapshot.empty) {
-            const doc = querySnapshot.docs[0];
-            console.log('Validation found in Firebase cache');
-            return doc.data();
+            const doc = querySnapshot.docs[0].data();
+            logger.debug('Validación encontrada en cache');
+            return {
+                ...doc,
+                cached: true,
+                timestamp: doc.timestamp.toDate().toISOString()
+            };
         }
-        console.log('No cached validation found');
+        logger.debug('No se encontró validación en cache');
         return null;
     } catch (error) {
-        console.error('Error querying Firebase:', error);
+        logger.error('Error consultando Firebase:', error);
         return null;
     }
 }

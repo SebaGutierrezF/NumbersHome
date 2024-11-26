@@ -1,8 +1,7 @@
 // phone.js
 import axios from 'axios';
-import { initializeApp, cert } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
 import dotenv from 'dotenv';
+
 import {
     validatePhoneNumber,
     saveValidationToFirebase,
@@ -13,13 +12,6 @@ import { logger } from '../utils/logger.js';
 
 // Configurar variables de entorno
 dotenv.config();
-
-// Inicializar Firebase Admin
-const firebaseAdmin = initializeApp({
-    credential: cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT))
-});
-
-const db = getFirestore();
 
 // Validar número de teléfono
 export async function validatePhone(req, res) {
