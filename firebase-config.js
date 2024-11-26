@@ -1,23 +1,31 @@
 // Importaciones usando CDN para GitHub Pages
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getFirestore, collection, getDocs, addDoc, query, where, orderBy, limit } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-require('dotenv').config();
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs, addDoc, query, where, orderBy, limit } from 'firebase/firestore';
 
 // Función para obtener las variables de entorno
 function getEnvConfig() {
-    if (!process.env) {
-        console.error('Environment variables not found. Please make sure you have configured the GitHub secrets.');
-        throw new Error('Missing environment configuration');
+    // Intentar obtener las variables de window.env (para GitHub Pages)
+    if (window.env) {
+        return {
+            apiKey: window.env.VITE_FIREBASE_API_KEY,
+            authDomain: window.env.VITE_FIREBASE_AUTH_DOMAIN,
+            projectId: window.env.VITE_FIREBASE_PROJECT_ID,
+            storageBucket: window.env.VITE_FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: window.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+            appId: window.env.VITE_FIREBASE_APP_ID,
+            measurementId: window.env.VITE_MEASUREMENT_ID
+        };
     }
-
+    
+    // Si no está window.env, usar import.meta.env (para desarrollo local)
     return {
-        apiKey: process.env.VITE_FIREBASE_API_KEY,
-        authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
-        projectId: process.env.VITE_FIREBASE_PROJECT_ID,
-        storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-        appId: process.env.VITE_FIREBASE_APP_ID,
-        measurementId: process.env.VITE_MEASUREMENT_ID
+        apiKey: secrets.VITE_FIREBASE_API_KEY,
+        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+        appId: import.meta.env.VITE_FIREBASE_APP_ID,
+        measurementId: import.meta.env.VITE_MEASUREMENT_ID
     };
 }
 
@@ -52,10 +60,10 @@ export async function saveToFirebase(data) {
             ...data,
             timestamp: new Date()
         });
-        console.log('Data saved successfully with ID:', docRef.id);
-        return docRef.id;
+        console.log('Document written with ID: ', docRef.id);
+        return docRef;
     } catch (error) {
-        console.error("Error saving to Firebase:", error);
+        console.error('Error saving to Firebase:', error);
         throw error;
     }
 }
@@ -66,19 +74,19 @@ export async function queryFirebase(phoneNumber) {
         if (!db) {
             throw new Error('Firebase not initialized');
         }
-        console.log('Querying Firebase for phone number:', phoneNumber);
-        const numbersRef = collection(db, 'numbers');
         const q = query(
-            numbersRef,
+            collection(db, 'numbers'),
             where('phoneNumber', '==', phoneNumber),
             orderBy('timestamp', 'desc'),
             limit(1)
         );
         const querySnapshot = await getDocs(q);
-        console.log('Query result:', querySnapshot.empty ? 'No data found' : 'Data found');
-        return querySnapshot.empty ? null : querySnapshot.docs[0].data();
+        if (querySnapshot.empty) {
+            return null;
+        }
+        return querySnapshot.docs[0].data();
     } catch (error) {
-        console.error("Error querying Firebase:", error);
+        console.error('Error querying Firebase:', error);
         throw error;
     }
 }
