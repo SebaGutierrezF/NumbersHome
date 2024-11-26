@@ -5,17 +5,12 @@ services:
     env: node
     region: ohio
     plan: starter
-    healthCheckPath: /api/health
     buildCommand: |
-      cd backend
-      npm ci
-      cd ../frontend
-      npm ci
+      cd backend && npm ci
+      cd ../frontend && npm ci
       npm run build
-      cd ..
     startCommand: cd backend && NODE_ENV=production npm start
-    staticPublishPath: ./frontend/dist
-    autoDeploy: true
+    staticPublishPath: frontend/dist
     envVars:
       - key: NODE_VERSION
         value: 20.0.0
@@ -27,6 +22,7 @@ services:
         sync: false
       - key: FIREBASE_SERVICE_ACCOUNT
         sync: false
+      # Firebase Client Environment Variables
       - key: VITE_FIREBASE_API_KEY
         sync: false
       - key: VITE_FIREBASE_AUTH_DOMAIN

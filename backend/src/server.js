@@ -25,19 +25,13 @@ app.use(cors({
     credentials: true
 }));
 
-// Servir archivos estáticos del frontend
-if (!isDevelopment) {
-    const staticPath = path.join(__dirname, '../../../frontend/dist');
-    console.log('Serving static files from:', staticPath);
-    app.use(express.static(staticPath));
-}
-
 // API Routes
 app.get('/api/health', (req, res) => {
     res.json({ 
         status: 'ok',
         environment: process.env.NODE_ENV || 'production',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        cors: process.env.CORS_ORIGIN || '*'
     });
 });
 
@@ -52,21 +46,25 @@ app.use('/api', (err, req, res, next) => {
     });
 });
 
-// Servir index.html para todas las rutas no-API en producción
+// Servir archivos estáticos y manejar SPA
 if (!isDevelopment) {
+    // Servir archivos estáticos desde el directorio dist
+    const staticPath = path.join(__dirname, '../../frontend/dist');
+    console.log('Serving static files from:', staticPath);
+    app.use(express.static(staticPath));
+
+    // Manejar todas las rutas no-API para SPA
     app.get('*', (req, res) => {
         if (!req.path.startsWith('/api')) {
-            const indexPath = path.join(__dirname, '../../../frontend/dist/index.html');
-            console.log('Serving SPA from:', indexPath);
-            res.sendFile(indexPath);
+            res.sendFile(path.join(staticPath, 'index.html'));
         }
     });
 }
 
-// Start server
+// Iniciar servidor
 app.listen(PORT, () => {
-    console.log(`Server running in ${process.env.NODE_ENV || 'production'} mode on port ${PORT}`);
-    if (!isDevelopment) {
-        console.log('Serving frontend static files');
-    }
+    console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV || 'production'} mode`);
+    console.log(`API Health check: http://localhost:${PORT}/api/health`);
+    console.log(`CORS Origin: ${process.env.CORS_ORIGIN || '*'}`);
+    console.log(`Static files path: ${!isDevelopment ? path.join(__dirname, '../../frontend/dist') : 'Not serving in development'}`);
 });

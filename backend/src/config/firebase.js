@@ -1,55 +1,36 @@
 // firebase.js
-import admin from 'firebase-admin';
-import dotenv from 'dotenv';
+import { initializeApp, cert } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 
-dotenv.config();
+let db = null;
 
-// Inicializar Firebase Admin
-try {
-    let serviceAccount;
-    const rawServiceAccount = process.env.FIREBASE_SERVICE_ACCOUNT;
-
-    if (!rawServiceAccount) {
-        throw new Error('FIREBASE_SERVICE_ACCOUNT environment variable is not defined');
-    }
-
+export function initializeFirebase() {
     try {
-        // Intentar parsear la variable de entorno como JSON
-        serviceAccount = JSON.parse(rawServiceAccount);
-    } catch (parseError) {
-        console.error('Error parsing FIREBASE_SERVICE_ACCOUNT:', parseError);
-        
-        // Verificar si es una cadena base64
-        try {
-            const decodedServiceAccount = Buffer.from(rawServiceAccount, 'base64').toString();
-            serviceAccount = JSON.parse(decodedServiceAccount);
-            console.log('Successfully parsed base64 service account');
-        } catch (base64Error) {
-            console.error('Error parsing base64 service account:', base64Error);
-            throw new Error('FIREBASE_SERVICE_ACCOUNT must be a valid JSON or base64 encoded JSON');
+        if (!process.env.FIREBASE_SERVICE_ACCOUNT) {
+            throw new Error('FIREBASE_SERVICE_ACCOUNT environment variable is not set');
         }
+
+        const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+        
+        if (!serviceAccount.project_id || !serviceAccount.private_key || !serviceAccount.client_email) {
+            throw new Error('Invalid Firebase service account configuration');
+        }
+
+        const app = initializeApp({
+            credential: cert(serviceAccount)
+        });
+
+        db = getFirestore(app);
+        console.log('Firebase initialized successfully for project:', serviceAccount.project_id);
+    } catch (error) {
+        console.error('Error initializing Firebase:', error);
+        throw error;
     }
-
-    // Validar que el serviceAccount tenga los campos requeridos
-    const requiredFields = ['type', 'project_id', 'private_key_id', 'private_key', 'client_email'];
-    const missingFields = requiredFields.filter(field => !serviceAccount[field]);
-    
-    if (missingFields.length > 0) {
-        throw new Error(`Service account is missing required fields: ${missingFields.join(', ')}`);
-    }
-
-    // Inicializar Firebase Admin
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
-    });
-
-    console.log('Firebase Admin initialized successfully for project:', serviceAccount.project_id);
-} catch (error) {
-    console.error('Error initializing Firebase Admin:', error);
-    throw error; // Propagar el error para que pueda ser manejado por el servidor
 }
 
-// Exportar las instancias necesarias
-export const db = admin.firestore();
-export const auth = admin.auth();
-export default admin;
+export function getDb() {
+    if (!db) {
+        throw new Error('Firebase has not been initialized. Call initializeFirebase() first.');
+    }
+    return db;
+}
