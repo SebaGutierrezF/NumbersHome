@@ -1,8 +1,8 @@
 // Importaciones usando CDN para GitHub Pages
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { initializeApp } from '/node_modules/firebase/app/dist/index.esm.js';
+import { getAuth } from '/node_modules/firebase/auth/dist/index.esm.js';
+import { getFirestore } from '/node_modules/firebase/firestore/dist/index.esm.js';
+import { getStorage } from '/node_modules/firebase/storage/dist/index.esm.js';
 
 // Obtener configuración de Firebase desde las variables de entorno
 const firebaseConfig = {

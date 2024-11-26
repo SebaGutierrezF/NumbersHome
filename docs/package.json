@@ -1,0 +1,11 @@
+{
+  "name": "number-home-frontend",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "firebase": "^10.14.1"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11"
+  }
+}
