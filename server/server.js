@@ -1,7 +1,14 @@
-const express = require('express');
-const cors = require('cors');
-const axios = require('axios');
-require('dotenv').config({ path: '../.env' });
+import express from 'express';
+import cors from 'cors';
+import axios from 'axios';
+import * as dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+// Configurar dotenv con la ruta correcta
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenv.config({ path: join(__dirname, '../.env') });
 
 // Configuración
 const config = {
