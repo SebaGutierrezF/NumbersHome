@@ -7,6 +7,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    cssCodeSplit: true,
   },
   server: {
     port: 5173,
@@ -21,5 +22,8 @@ export default defineConfig({
     alias: {
       '@': '/src',
     },
+  },
+  css: {
+    modules: false,
   },
 });

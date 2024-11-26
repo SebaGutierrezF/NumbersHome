@@ -1,5 +1,4 @@
 import { validatePhoneNumber } from './services/api.js';
-import './styles/styles.css';
 
 // Inicializar la aplicación
 document.addEventListener('DOMContentLoaded', () => {
@@ -11,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar mapa
     map = L.map('map').setView([0, 0], 2);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: ' OpenStreetMap contributors'
     }).addTo(map);
 
     const showError = (message) => {
