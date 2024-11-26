@@ -4,20 +4,25 @@ services:
     name: numbers-home-api
     env: node
     region: ohio
+    plan: starter
+    healthCheckPath: /api/health
     buildCommand: |
       cd backend
-      npm install
+      npm ci
       cd ../frontend
-      npm install
+      npm ci
       npm run build
       cd ..
-    startCommand: cd backend && npm start
+    startCommand: cd backend && NODE_ENV=production npm start
     staticPublishPath: ./frontend/dist
+    autoDeploy: true
     envVars:
       - key: NODE_VERSION
         value: 20.0.0
       - key: PORT
         value: 3000
+      - key: NODE_ENV
+        value: production
       - key: CORS_ORIGIN
         sync: false
       - key: FIREBASE_SERVICE_ACCOUNT

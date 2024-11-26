@@ -300,6 +300,35 @@ button i {
     font-weight: 600;
 }
 
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+button:focus-visible,
+input:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Soporte para navegadores antiguos */
+@supports not (--foo: green) {
+    body {
+        background-color: #f8fafc;
+        color: #1e293b;
+    }
+    
+    input[type="tel"] {
+        background-color: #ffffff;
+        color: #1e293b;
+    }
+}
+
 /* Media queries */
 @media (min-width: 1024px) {
     body {

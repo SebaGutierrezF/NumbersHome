@@ -4,33 +4,61 @@ node_modules/
 
 # Archivos de construcción
 dist/
-.parcel-cache/
 build/
+**/dist/
+.parcel-cache/
 
-# Archivos de entorno
+# Archivos de entorno y configuración
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
 
-# Logs
+# Logs y debugging
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
-# Editor
-.vscode/
+# Editor y IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
 .idea/
 *.swp
 *.swo
+*.sublime-*
+*.code-workspace
 
 # Sistema operativo
 .DS_Store
 Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
 
-# Lock files (mantener solo uno)
+# Lock files (mantener package-lock.json)
 yarn.lock
-package-lock.json
+pnpm-lock.yaml
 !package-lock.json
+
+# Firebase
+firebase-debug.log*
+firebase-debug.*.log*
+.firebase/
+**/serviceAccount*.json
+
+# Vite
+.vite/
+*.local
+
+# Coverage y testing
+coverage/
+.nyc_output/
+*.lcov
 
 # Auto detect text files and perform LF normalization
 * text=auto
@@ -49,17 +77,28 @@ package-lock.json
 # Binarios
 *.png binary
 *.jpg binary
+*.jpeg binary
 *.gif binary
 *.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.ttf binary
+*.otf binary
 *.pdf binary
 
-
-
-# API Keys y configuraciones sensibles
-config.js
-**/api-keys.*
-**/credentials.*
-
-# Archivos de caché
+# Archivos temporales
+*.tmp
+*.temp
 .cache/
 *.cache
+.temp/
+tmp/
+
+# API Keys y configuraciones sensibles
+**/*config.js
+!**/default-config.js
+**/api-keys.*
+**/credentials.*
+**/serviceAccount*.json
