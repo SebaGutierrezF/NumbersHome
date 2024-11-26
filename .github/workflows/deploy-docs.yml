@@ -15,6 +15,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
       - name: Generate env.js
         run: |
           # Crear el archivo env.js con las variables de entorno
@@ -37,6 +46,9 @@ jobs:
             echo "Error: env.js no se pudo crear"
             exit 1
           fi
+
+      - name: Build
+        run: npm run build
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
