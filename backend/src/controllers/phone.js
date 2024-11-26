@@ -8,6 +8,8 @@ import {
     saveValidationToFirebase,
     getValidationFromFirebase
 } from '../services/phoneValidation.js';
+import { handleError } from '../utils/errors.js';
+import { logger } from '../utils/logger.js';
 
 // Configurar variables de entorno
 dotenv.config();
@@ -25,36 +27,46 @@ export async function validatePhone(req, res) {
         const { phoneNumber } = req.body;
 
         if (!phoneNumber) {
+            logger.warn('Intento de validación sin número de teléfono');
             return res.status(400).json({
                 error: 'Se requiere un número de teléfono'
             });
         }
 
-        // Primero intentar obtener de cache
-        const cachedValidation = await getValidationFromFirebase(phoneNumber);
-        if (cachedValidation) {
-            return res.json({
-                ...cachedValidation,
-                cached: true
-            });
+        // Limpiar el número de teléfono de espacios y caracteres especiales
+        const cleanPhoneNumber = phoneNumber.replace(/\s+/g, '').replace(/[-()+]/g, '');
+        logger.info(`Validando número: ${cleanPhoneNumber}`);
+
+        try {
+            // Primero intentar obtener de cache
+            const cachedValidation = await getValidationFromFirebase(cleanPhoneNumber);
+            if (cachedValidation) {
+                logger.debug('Resultado encontrado en cache');
+                return res.json({
+                    ...cachedValidation,
+                    cached: true
+                });
+            }
+        } catch (cacheError) {
+            logger.warn('Error al consultar cache:', cacheError);
+            // Continuar con la validación aunque falle el cache
         }
 
-        // Si no está en cache, validar con API externa
-        const validationResult = await validatePhoneNumber(phoneNumber);
+        // Si no está en cache o hubo error, validar con API externa
+        const validationResult = await validatePhoneNumber(cleanPhoneNumber);
         
         // Guardar en Firebase (async)
         saveValidationToFirebase(validationResult).catch(error => {
-            console.error('Error saving validation:', error);
+            logger.error('Error guardando validación:', error);
         });
 
+        logger.info('Validación completada exitosamente');
         res.json({
             ...validationResult,
             cached: false
         });
     } catch (error) {
-        console.error('Error in phone validation:', error);
-        res.status(500).json({
-            error: 'Error al procesar la validación del número'
-        });
+        logger.error('Error en validación:', error);
+        handleError(error, res);
     }
 }

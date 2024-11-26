@@ -1,39 +1,39 @@
 services:
   # Backend Service
   - type: web
-    name: numbers-home-api
+    name: numberhome-backend
     env: node
     region: ohio
-    plan: starter
-    buildCommand: |
-      cd backend && npm ci
-      cd ../frontend && npm ci
-      npm run build
-    startCommand: cd backend && NODE_ENV=production npm start
-    staticPublishPath: frontend/dist
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
     envVars:
       - key: NODE_VERSION
-        value: 20.0.0
-      - key: PORT
-        value: 3000
+        value: 18.0.0
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 3000
       - key: CORS_ORIGIN
+        sync: false
+      - key: NUMLOOKUP_API_KEY
         sync: false
       - key: FIREBASE_SERVICE_ACCOUNT
         sync: false
-      # Firebase Client Environment Variables
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+  # Frontend Service
+  - type: web
+    name: numberhome-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://numberhome-backend.onrender.com
       - key: VITE_FIREBASE_API_KEY
         sync: false
       - key: VITE_FIREBASE_AUTH_DOMAIN
         sync: false
       - key: VITE_FIREBASE_PROJECT_ID
-        sync: false
-      - key: VITE_FIREBASE_STORAGE_BUCKET
-        sync: false
-      - key: VITE_FIREBASE_MESSAGING_SENDER_ID
-        sync: false
-      - key: VITE_FIREBASE_APP_ID
-        sync: false
-      - key: VITE_MEASUREMENT_ID
         sync: false
