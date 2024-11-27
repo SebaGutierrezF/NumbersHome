@@ -1,11 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 import { validatePhone } from './controllers/phone.js';
-import { initializeFirebase } from './config/firebase.js';
-import { logger } from './utils/logger.js';
 
 // Configurar variables de entorno
 dotenv.config();
@@ -23,27 +19,24 @@ app.use(cors({
 // Middleware para parsear JSON
 app.use(express.json());
 
-// Inicializar Firebase
-try {
-    initializeFirebase();
-    logger.info('Firebase inicializado correctamente');
-} catch (error) {
-    logger.error('Error al inicializar Firebase:', error);
-    process.exit(1);
-}
+// Health check endpoint
+app.get('/health', (req, res) => {
+    res.json({ status: 'ok' });
+});
 
 // Rutas
-app.post('/api/validate', validatePhone);
+app.post('/api/phone', validatePhone);
 
-// Manejo de errores global
+// Manejo de errores
 app.use((err, req, res, next) => {
-    logger.error('Error no manejado:', err);
+    console.error(err.stack);
     res.status(500).json({
-        error: 'Error interno del servidor'
+        error: 'Error interno del servidor',
+        details: err.message
     });
 });
 
 // Iniciar servidor
 app.listen(port, () => {
-    logger.info(`Servidor escuchando en puerto ${port}`);
+    console.log(`Servidor corriendo en puerto ${port}`);
 });

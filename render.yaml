@@ -1,19 +1,22 @@
 services:
   # Backend Service
   - type: web
-    name: numberhome-backend
+    name: numbers-home-api
     env: node
     region: ohio
-    buildCommand: cd backend && npm install
+    buildCommand: |
+      cd backend
+      npm install
+      ls -la src/services/
     startCommand: cd backend && npm start
     envVars:
-      - key: NODE_ENV
-        value: production
+      - key: NODE_VERSION
+        value: 20.0.0
       - key: PORT
         value: 3000
       - key: CORS_ORIGIN
-        value: https://numberhome-frontend.onrender.com
-      - key: NUMLOOKUP_API_KEY
+        sync: false
+      - key: API_KEY
         sync: false
       - key: FIREBASE_SERVICE_ACCOUNT
         sync: false
