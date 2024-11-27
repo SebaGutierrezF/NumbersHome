@@ -7,14 +7,12 @@ services:
     buildCommand: cd backend && npm install
     startCommand: cd backend && npm start
     envVars:
-      - key: NODE_VERSION
-        value: 18.0.0
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 3000
       - key: CORS_ORIGIN
-        sync: false
+        value: https://numberhome-frontend.onrender.com
       - key: NUMLOOKUP_API_KEY
         sync: false
       - key: FIREBASE_SERVICE_ACCOUNT
